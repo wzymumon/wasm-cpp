@@ -5,10 +5,10 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_executable(wasm_cpp main.cpp)
 
-include_directories(${CMAKE_SOURCE_DIR}/wasmtime-c-api/include)
-link_directories(${CMAKE_SOURCE_DIR}/wasmtime-c-api/lib)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/wasmtime/crates/c-api
+        ${CMAKE_CURRENT_BINARY_DIR}/wasmtime)
 
 add_executable(WasmtimeMain WasmtimeMain.cpp)
 
-target_include_directories(WasmtimeMain INTERFACE wasmtime-c-api/include)
-target_link_libraries(WasmtimeMain libwasmtime.a libwasmtime.so stdc++ pthread dl)
+target_include_directories(WasmtimeMain PUBLIC wasmtime)
+target_link_libraries(WasmtimeMain PUBLIC wasmtime)

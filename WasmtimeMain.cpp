@@ -1,7 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include "thirdparty/wasmtime/wasmtime.hh"
+#include "wasmtime.hh"
 
 using namespace wasmtime;
 
