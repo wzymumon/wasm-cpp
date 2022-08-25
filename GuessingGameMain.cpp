@@ -19,12 +19,15 @@ int main() {
     // can instantiate it.
     Engine engine;
     Store store(engine);
-    auto module = Module::compile(engine, readFile("demo/gcd/gcd.wat")).unwrap();
+    auto module = Module::compile(engine, "demo/guessing_name/target/debug/guessing_game.wasm").unwrap();
     auto instance = Instance::create(store, module, {}).unwrap();
 
     // Invoke `gcd` export
     auto gcd = std::get<Func>(*instance.get(store, "gcd"));
-    auto results = gcd.call(store, {6, 27}).unwrap();
 
-    std::cout << "gcd(6, 27) = " << results[0].i32() << "\n";
+    auto a1 = 81;
+    auto b1 = 27;
+    auto results = gcd.call(store, {a1, b1}).unwrap();
+
+    std::cout << "gcd(81, 27) = " << results[0].i32() << "\n";
 }
