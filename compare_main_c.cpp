@@ -24,7 +24,7 @@ int main(int argc, const char* argv[]) {
 
     // Load binary.
     printf("Loading binary...\n");
-    FILE* file = fopen("examples/fib-debug/wasm/target/wasm32-unknown-unknown/debug/fib.wasm", "rb");
+    FILE* file = fopen("demo/compare/compare/target/wasm32-unknown-unknown/debug/compare.wasm", "rb");
     if (!file) {
         printf("> Error opening module!\n");
         return 1;
@@ -58,22 +58,24 @@ int main(int argc, const char* argv[]) {
     wasmtime_module_delete(module);
 
     // Extract export.
-    wasmtime_extern_t fib;
-    bool ok = wasmtime_instance_export_get(context, &instance, "fib", 3, &fib);
+    wasmtime_extern_t compare;
+    bool ok = wasmtime_instance_export_get(context, &instance, "compare", 7, &compare);
     assert(ok);
 
     // Call.
-    printf("Calling fib...\n");
-    wasmtime_val_t params[1];
-    params[0].kind = WASMTIME_I32;
-    params[0].of.i32 = 6;
+    printf("Calling compare...\n");
+    wasmtime_val_t params[2];
+    params[0].kind = WASMTIME_I64;
+    params[0].of.i64 = 10;
+    params[1].kind = WASMTIME_I64;
+    params[1].of.i64 = 6;
     wasmtime_val_t results[1];
-    error = wasmtime_func_call(context, &fib.of.func, params, 1, results, 1, &trap);
+    error = wasmtime_func_call(context, &compare.of.func, params, 2, results, 1, &trap);
     if (error != NULL || trap != NULL)
         exit_with_error("failed to call function", error, trap);
 
     assert(results[0].kind == WASMTIME_I32);
-    printf("> fib(6) = %d\n", results[0].of.i32);
+    printf("> compare(10, 6) = %d\n", results[0].of.i32);
 
     // Shut down.
     printf("Shutting down...\n");
