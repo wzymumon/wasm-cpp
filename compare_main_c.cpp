@@ -1,7 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <inttypes.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cinttypes>
 #include <wasm.h>
 #include <wasmtime.h>
 
@@ -19,12 +19,12 @@ int main(int argc, const char* argv[]) {
     // Initialize.
     printf("Initializing...\n");
     wasm_engine_t* engine = wasm_engine_new_with_config(config);
-    wasmtime_store_t* store = wasmtime_store_new(engine, NULL, NULL);
+    wasmtime_store_t* store = wasmtime_store_new(engine, nullptr, nullptr);
     wasmtime_context_t* context = wasmtime_store_context(store);
 
     // Load binary.
     printf("Loading binary...\n");
-    FILE* file = fopen("demo/compare/compare/target/wasm32-unknown-unknown/debug/compare.wasm", "rb");
+    FILE* file = fopen("demo/larger_than/target/wasm32-unknown-unknown/debug/lib.wasm", "rb");
     if (!file) {
         printf("> Error opening module!\n");
         return 1;
@@ -42,7 +42,7 @@ int main(int argc, const char* argv[]) {
 
     // Compile.
     printf("Compiling module...\n");
-    wasmtime_module_t *module = NULL;
+    wasmtime_module_t *module = nullptr;
     wasmtime_error_t* error = wasmtime_module_new(engine, (uint8_t*) binary.data, binary.size, &module);
     if (!module)
         exit_with_error("failed to compile module", error, NULL);
@@ -51,31 +51,31 @@ int main(int argc, const char* argv[]) {
     // Instantiate.
     printf("Instantiating module...\n");
     wasmtime_instance_t instance;
-    wasm_trap_t *trap = NULL;
-    error = wasmtime_instance_new(context, module, NULL, 0, &instance, &trap);
-    if (error != NULL || trap != NULL)
+    wasm_trap_t *trap = nullptr;
+    error = wasmtime_instance_new(context, module, nullptr, 0, &instance, &trap);
+    if (error != nullptr || trap != nullptr)
         exit_with_error("failed to instantiate", error, trap);
     wasmtime_module_delete(module);
 
     // Extract export.
     wasmtime_extern_t compare;
-    bool ok = wasmtime_instance_export_get(context, &instance, "compare", 7, &compare);
+    bool ok = wasmtime_instance_export_get(context, &instance, "larger_than", 11, &compare);
     assert(ok);
 
     // Call.
     printf("Calling compare...\n");
     wasmtime_val_t params[2];
-    params[0].kind = WASMTIME_I64;
+    params[0].kind = WASMTIME_F64;
     params[0].of.i64 = 10;
-    params[1].kind = WASMTIME_I64;
+    params[1].kind = WASMTIME_F64;
     params[1].of.i64 = 6;
     wasmtime_val_t results[1];
     error = wasmtime_func_call(context, &compare.of.func, params, 2, results, 1, &trap);
-    if (error != NULL || trap != NULL)
+    if (error != nullptr || trap != nullptr)
         exit_with_error("failed to call function", error, trap);
 
     assert(results[0].kind == WASMTIME_I32);
-    printf("> compare(10, 6) = %d\n", results[0].of.i32);
+    printf("> larger_than(10, 6) = %d\n", results[0].of.i32);
 
     // Shut down.
     printf("Shutting down...\n");
@@ -90,7 +90,7 @@ int main(int argc, const char* argv[]) {
 static void exit_with_error(const char *message, wasmtime_error_t *error, wasm_trap_t *trap) {
     fprintf(stderr, "error: %s\n", message);
     wasm_byte_vec_t error_message;
-    if (error != NULL) {
+    if (error != nullptr) {
         wasmtime_error_message(error, &error_message);
     } else {
         wasm_trap_message(trap, &error_message);
