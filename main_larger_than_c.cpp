@@ -24,7 +24,7 @@ int main(int argc, const char* argv[]) {
 
     // Load binary.
     printf("Loading binary...\n");
-    FILE* file = fopen("demo/larger_than/target/wasm32-unknown-unknown/debug/lib.wasm", "rb");
+    FILE* file = fopen("demo/larger_than/larger_than.wasm", "rb");
     if (!file) {
         printf("> Error opening module!\n");
         return 1;
@@ -45,7 +45,7 @@ int main(int argc, const char* argv[]) {
     wasmtime_module_t *module = nullptr;
     wasmtime_error_t* error = wasmtime_module_new(engine, (uint8_t*) binary.data, binary.size, &module);
     if (!module)
-        exit_with_error("failed to compile module", error, NULL);
+        exit_with_error("failed to compile module", error, nullptr);
     wasm_byte_vec_delete(&binary);
 
     // Instantiate.

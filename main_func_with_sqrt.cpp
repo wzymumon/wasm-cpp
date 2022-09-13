@@ -19,17 +19,15 @@ int main() {
     // can instantiate it.
     Engine engine;
     Store store(engine);
-    auto module = Module::compile(engine, readFile("demo/multiple_columns_compare/multiple_columns_sqrt.wat")).unwrap();
+    auto module = Module::compile(engine, readFile("demo/func_with_sqrt/func_with_sqrt.wat")).unwrap();
     auto instance = Instance::create(store, module, {}).unwrap();
 
-    // Invoke `gcd` export
     std::vector<Val> params;
-    params.emplace_back(int64_t(10));
-    params.emplace_back(int64_t(12.1));
-    params.emplace_back(float64_t(12.1));
+    params.emplace_back(int64_t(100));
+    params.emplace_back(float64_t(123.45));
 
-    auto multiple_compare = std::get<Func>(*instance.get(store, "multiple_compare"));
-    auto results = multiple_compare.call(store, params).unwrap();
+    auto func = std::get<Func>(*instance.get(store, "func_with_sqrt"));
+    auto results = func.call(store, params).unwrap();
 
-    std::cout << "multiple_compare(10, 10, 365.242) = " << results[0].i32() << "\n";
+    std::cout << "func_with_sqrt(100, 123.45) = " << results[0].i32() << "\n";
 }

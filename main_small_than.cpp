@@ -19,14 +19,13 @@ int main() {
     // can instantiate it.
     Engine engine;
     Store store(engine);
-    auto module = Module::compile(engine, readFile("demo/larger_than/lib.wat")).unwrap();
+    auto module = Module::compile(engine, readFile("demo/small_than/small_than.wat")).unwrap();
     auto instance = Instance::create(store, module, {}).unwrap();
 
-    // Invoke `gcd` export
-    auto smaller_than = std::get<Func>(*instance.get(store, "larger_than"));
-    float64_t a = 10;
-    float64_t b = 12.1;
-    auto results =smaller_than.call(store, {a, b}).unwrap();
+    auto func = std::get<Func>(*instance.get(store, "smaller_than"));
+    int64_t a = 10;
+    int64_t b = 12;
+    auto results =func.call(store, {a, b}).unwrap();
 
-    std::cout << "multiple_compare(10, 10, 365.242) = " << results[0].i32() << "\n";
+    std::cout << "smaller_than(10, 12) = " << results[0].i32() << "\n";
 }
