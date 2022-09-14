@@ -19,12 +19,12 @@ int main() {
     // can instantiate it.
     Engine engine;
     Store store(engine);
-    auto module = Module::compile(engine, readFile("demo/func_with_sqrt/func_with_sqrt.wat")).unwrap();
+    auto module = Module::compile(engine, readFile("demo/func_with_sqrt/lib.wat")).unwrap();
     auto instance = Instance::create(store, module, {}).unwrap();
 
     std::vector<Val> params;
     params.emplace_back(int64_t(100));
-    params.emplace_back(float64_t(123.45));
+    params.emplace_back(double(123.45));
 
     auto func = std::get<Func>(*instance.get(store, "func_with_sqrt"));
     auto results = func.call(store, params).unwrap();

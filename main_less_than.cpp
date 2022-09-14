@@ -19,13 +19,13 @@ int main() {
     // can instantiate it.
     Engine engine;
     Store store(engine);
-    auto module = Module::compile(engine, readFile("demo/small_than/small_than.wat")).unwrap();
+    auto module = Module::compile(engine, readFile("demo/less_than/lib.wat")).unwrap();
     auto instance = Instance::create(store, module, {}).unwrap();
 
-    auto func = std::get<Func>(*instance.get(store, "smaller_than"));
+    auto func = std::get<Func>(*instance.get(store, "less_than"));
     int64_t a = 10;
     int64_t b = 12;
     auto results =func.call(store, {a, b}).unwrap();
 
-    std::cout << "smaller_than(10, 12) = " << results[0].i32() << "\n";
+    std::cout << "less_than(10, 12) = " << results[0].i32() << "\n";
 }

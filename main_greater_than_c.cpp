@@ -24,7 +24,7 @@ int main(int argc, const char* argv[]) {
 
     // Load binary.
     printf("Loading binary...\n");
-    FILE* file = fopen("demo/larger_than/larger_than.wasm", "rb");
+    FILE* file = fopen("demo/multi_greater_than/lib.wasm", "rb");
     if (!file) {
         printf("> Error opening module!\n");
         return 1;
@@ -59,23 +59,27 @@ int main(int argc, const char* argv[]) {
 
     // Extract export.
     wasmtime_extern_t compare;
-    bool ok = wasmtime_instance_export_get(context, &instance, "larger_than", 11, &compare);
+    bool ok = wasmtime_instance_export_get(context, &instance, "multi_greater_than", 18, &compare);
     assert(ok);
 
     // Call.
     printf("Calling compare...\n");
-    wasmtime_val_t params[2];
-    params[0].kind = WASMTIME_F64;
-    params[0].of.i64 = 10;
-    params[1].kind = WASMTIME_F64;
-    params[1].of.i64 = 6;
+    wasmtime_val_t params[3];
+    params[0].kind = WASMTIME_I64;
+    params[0].of.i64 = 20;
+    params[1].kind = WASMTIME_I32;
+    params[1].of.i32 = 300;
+    params[2].kind = WASMTIME_F64;
+    params[2].of.f64 = 365.21;
+
     wasmtime_val_t results[1];
-    error = wasmtime_func_call(context, &compare.of.func, params, 2, results, 1, &trap);
+    error = wasmtime_func_call(context, &compare.of.func, params, 3, results, 1, &trap);
     if (error != nullptr || trap != nullptr)
         exit_with_error("failed to call function", error, trap);
 
     assert(results[0].kind == WASMTIME_I32);
-    printf("> larger_than(10, 6) = %d\n", results[0].of.i32);
+    // 20 + 300 > 365.21  false
+    assert(results[0].of.i32 == 0);
 
     // Shut down.
     printf("Shutting down...\n");

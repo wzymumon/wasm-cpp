@@ -17,7 +17,7 @@ int main() {
     // can instantiate it.
     wasmtime::Engine engine;
     wasmtime::Store store(engine);
-    auto module = wasmtime::Module::compile(engine, readFile("demo/multiple_columns/multiple_columns.wat")).unwrap();
+    auto module = wasmtime::Module::compile(engine, readFile("demo/multiple_columns/lib.wat")).unwrap();
     auto instance = wasmtime::Instance::create(store, module, {}).unwrap();
 
     std::vector<wasmtime::Val> params;
@@ -29,8 +29,8 @@ int main() {
     params.emplace_back(float64_t(2000.12122323));
     params.emplace_back(double(1111111111111));
 
-    auto multiple_compare = std::get<wasmtime::Func>(*instance.get(store, "multiple_compare"));
+    auto multiple_compare = std::get<wasmtime::Func>(*instance.get(store, "multiple_columns"));
     auto results = multiple_compare.call(store, params).unwrap();
 
-    std::cout << "multiple_compare(100, 2000, 2000, 2000, 2000.111, 2000.12122323, 11111111111) = " << results[0].i32() << "\n";
+    std::cout << "multiple_columns(100, 2000, 2000, 2000, 2000.111, 2000.12122323, 11111111111) = " << results[0].i32() << "\n";
 }

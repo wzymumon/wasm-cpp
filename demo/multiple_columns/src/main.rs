@@ -1,6 +1,6 @@
 mod lib;
 
-use lib::multiple_compare;
+use lib::multiple_columns;
 
 fn main() {
     let float: f32 = 4.82832;
@@ -12,7 +12,7 @@ fn main() {
 
     let exponential_of_four = floored_float.exp();
 
-    let multiple_compare_result = multiple_compare(100, 2000, 2000, 2000, 2000.111 as f32, 2000.212123 as f64, 2000 as f64);
+    let multiple_compare_result = multiple_columns(100, 2000, 2000, 2000, 2000.111 as f32, 2000.212123 as f64, 2000 as f64);
 
     println!("Floored test float {} to {}", float, floored_float);
     println!("The square root of {} is {}", floored_float, sqrt_of_four);
