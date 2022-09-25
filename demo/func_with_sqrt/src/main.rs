@@ -12,7 +12,7 @@ fn main() {
 
     let exponential_of_four = floored_float.exp();
 
-    let multiple_compare_result = func_with_sqrt(10, 365.242);
+    let multiple_compare_result = func_with_sqrt(201, 40040 as f64);
 
     println!("Floored test float {} to {}", float, floored_float);
     println!("The square root of {} is {}", floored_float, sqrt_of_four);
