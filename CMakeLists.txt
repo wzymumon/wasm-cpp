@@ -1,19 +1,33 @@
-cmake_minimum_required(VERSION 3.23)
+# CMake 最低版本号要求
+cmake_minimum_required(VERSION 3.16.3)
+
+# 项目信息
 project(wasm_cpp)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/third_party/wasmtime/crates/c-api
-        ${CMAKE_CURRENT_BINARY_DIR}/wasmtime)
-set(Boost_USE_STATIC_LIBS ON)
-set(Boost_DEBUG ON)
-find_package(Boost 1.58;REQUIRED COMPONENTS system filesystem)
+# add wasmtime
+# set(WASMTIME_LOCAL_PATH "${CMAKE_SOURCE_DIR}/wasmtime-c-api")
+# set(WASMTIME_INCLUDE_DIR ${WASMTIME_LOCAL_PATH}/include)
+# set(WASMTIME_LIBRARY ${WASMTIME_LOCAL_PATH}/lib)
+# set(WASMTIME_LIBRARYS libwasmtime.a libwasmtime.so stdc++ pthread dl)
 
-include_directories(wasmtime)
-link_libraries(wasmtime)
+# include(CMakePrintHelpers)
+# cmake_print_variables(WASMTIME_LOCAL_PATH)
+# cmake_print_variables(WASMTIME_INCLUDE_DIR)
+# cmake_print_variables(WASMTIME_LIBRARY)
+# cmake_print_variables(WASMTIME_LIBRARYS)
 
-add_executable(gcd main_gcd.cpp)
-add_executable(greater_than_c main_greater_than_c.cpp)
-add_executable(multiple_columns main_multiple_columns.cpp)
-add_executable(func_with_sqrt main_func_with_sqrt.cpp)
-add_executable(less_than main_less_than.cpp)
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_SOURCE_DIR}/../bin)
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_SOURCE_DIR}/../bin)
+
+# include_directories(${WASMTIME_INCLUDE_DIR})
+# link_directories(${WASMTIME_LIBRARY})
+
+include_directories(wasmtime-c-api/include)
+link_directories(wasmtime-c-api/lib)
+
+#TestWasm
+add_executable(TestWasm TestWasm.cpp)
+target_include_directories(TestWasm INTERFACE wasmtime-c-api/include)
+target_link_libraries(TestWasm libwasmtime.a libwasmtime.so stdc++ pthread dl pthread dl)
