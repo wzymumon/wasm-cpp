@@ -26,8 +26,14 @@ set(CMAKE_CXX_STANDARD 17)
 
 include_directories(wasmtime-c-api/include)
 link_directories(wasmtime-c-api/lib)
+link_libraries( libwasmtime.a libwasmtime.so stdc++ pthread dl pthread dl)
 
 #TestWasm
-add_executable(TestWasm TestWasm.cpp)
-target_include_directories(TestWasm INTERFACE wasmtime-c-api/include)
-target_link_libraries(TestWasm libwasmtime.a libwasmtime.so stdc++ pthread dl pthread dl)
+add_executable(TestWasm src/TestWasm.cpp)
+add_executable(gcd src/gcd.cpp)
+add_executable(addone src/addone.cpp)
+add_executable(add src/add.cpp)
+
+
+# target_include_directories(TestWasm INTERFACE wasmtime-c-api/include)
+# target_link_libraries(TestWasm libwasmtime.a libwasmtime.so stdc++ pthread dl pthread dl)
